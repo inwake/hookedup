@@ -30,11 +30,10 @@
     ]
   },
   "peerDependencies": {
-    "react": ">= 18.2.0",
-    "react-dom": ">= 18.2.0"
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^26.0.7",
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
@@ -60,9 +59,9 @@
     "npm"
   ],
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-native": "^0.72.4",
-    "prop-types": "^15.7.2"
+    "prop-types": "^15.7.2",
+    "react": "^18",
+    "react-dom": "^18",
+    "react-native": "^0.72"
   }
 }

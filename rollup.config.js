@@ -16,5 +16,5 @@ export default {
     },
   ],
   plugins: [sass({ insert: true }), typescript(), uglify()],
-  external: ['react', 'react-dom'],
+  external: ['react', 'react-dom', 'react-native', 'prop-types'],
 }

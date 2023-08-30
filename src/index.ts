@@ -1,4 +1,3 @@
-export {useCounter} from './hooks/useCounter'
 export {default as usePrevious} from './hooks/usePrevious'
 export {default as usePlatform} from './hooks/usePlatform'
 export {default as useAppVisibility} from './hooks/useAppVisibility'

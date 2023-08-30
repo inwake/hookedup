@@ -1,2 +1,2 @@
-export {useCounter} from './hooks/useCounter/'
-export {useAppVisibility} from './hooks/useAppVisibility.tsx'
+export {useCounter} from './hooks/useCounter'
+export {default as useAppVisibility} from './hooks/useAppVisibility'

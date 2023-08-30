@@ -6,7 +6,7 @@ export default function useAppVisibility() {
   const activeState = appState.current
   const [foreground, setForeground] = useState(false)
   const [background, setBackground] = useState(false)
-  const isActive = activeState.current === 'active'
+  const isActive = activeState === 'active'
 
   useEffect(function() {
     setBackground(false)

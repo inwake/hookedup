@@ -70,21 +70,12 @@ export default function usePosition(
 		streamOptions: customStreamOptions = defaultStreamOptions}
       : UsePositionProps = {}) {
 
-	const config = {...defaultCconfig, ...customConfig}
-	const getOptions = {...defaultGettOptions, ...customGetOptions}
-	const streamOptions = {...defaultStreamOptions, ...customStreamOptions}
-
-
-	// const config = {...config, ...customConfig}
-
-	// getOptions = {enableHighAccuracy: true,
-	// 	timeout: 10000, maximumAge: 10000},
-	// streamOptions = {enableHighAccuracy: true,
-	// 	interval: 2500, fastestInterval: 1000,
-	// 	timeout: 10000, maximumAge: 10000,
-	// 	distanceFilter: 25},
-	// streamPosition=false}
-	//   : UsePositionProps={}) {
+	const config = {...defaultCconfig,
+		...customConfig}
+	const getOptions = {...defaultGettOptions,
+		...customGetOptions}
+	const streamOptions = {...defaultStreamOptions,
+		...customStreamOptions}
 
 	const [position, setPosition] = useState<Position | null>(null)
 	const [motion, setMotion] = useState<Motion | null>(null)
@@ -103,17 +94,17 @@ export default function usePosition(
 		else if (!position) getPosition()
 
 		function setupPositionStream() {
-			if (streamPosition) {
-				id = Geolocation
-					.watchPosition(onPositionUpdate,
-						onUpdateError,
-						streamOptions)}}
+			if (!streamPosition) return
+			id = Geolocation
+				.watchPosition(onPositionUpdate,
+					onUpdateError,
+					streamOptions)}
 
 		function cleanUpPositionStream() {
 			Geolocation.clearWatch(id)}
 
 		return cleanUpPositionStream
-	}, [streamPosition])
+	})
 
 	function onPositionUpdate(data: any): Position {
 		const {coords, timestamp} = data
@@ -138,8 +129,7 @@ export default function usePosition(
 		POSITION_UNAVAILABLE: unavailable,
 		TIMEOUT: timeout}: any) {
 		const codeMap = {denied,
-			unavailable,
-			timeout}
+			unavailable, timeout}
 		const status = codeMap[code]
 		setError({message, status, code})
 		setReady(true)}

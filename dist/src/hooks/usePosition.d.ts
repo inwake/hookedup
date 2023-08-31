@@ -1,4 +1,7 @@
-interface PositionHookProps {
+interface UsePositionProps {
+    config?: typeof config;
+    getOptions?: typeof getOptions;
+    streamOptions?: typeof streamOptions;
     streamPosition?: boolean;
 }
 interface Position {
@@ -18,7 +21,26 @@ interface PositionError {
     status: string;
     code: number;
 }
-export default function usePosition({ streamPosition }: PositionHookProps): {
+declare const config: {
+    skipPermissionRequests: boolean;
+    enableBackgroundLocationUpdates: boolean;
+    authorizationLevel: string;
+    locationProvider: string;
+};
+declare const getOptions: {
+    enableHighAccuracy: boolean;
+    timeout: number;
+    maximumAge: number;
+};
+declare const streamOptions: {
+    enableHighAccuracy: boolean;
+    interval: number;
+    fastestInterval: number;
+    timeout: number;
+    maximumAge: number;
+    distanceFilter: number;
+};
+export default function usePosition(props?: UsePositionProps): {
     position: Position | null;
     motion: Motion | null;
     error: PositionError | undefined;

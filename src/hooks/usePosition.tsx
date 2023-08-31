@@ -1,8 +1,11 @@
 import {useState, useEffect} from 'react'
 import Geolocation from '@react-native-community/geolocation'
 
-interface PositionHookProps {
-	streamPosition?: boolean
+interface UsePositionProps {
+  config?: typeof config
+  getOptions?: typeof getOptions
+  streamOptions?: typeof streamOptions
+  streamPosition?: boolean
 }
 
 interface Position {
@@ -33,12 +36,15 @@ const config = {skipPermissionRequests: false,
 const getOptions = {enableHighAccuracy: true,
 	timeout: 10000, maximumAge: 10000}
 
-const watchOptions = {enableHighAccuracy: true,
+const streamOptions = {enableHighAccuracy: true,
 	interval: 2500, fastestInterval: 1000,
 	timeout: 10000, maximumAge: 10000,
 	distanceFilter: 25}
 
-export default function usePosition({streamPosition=false}: PositionHookProps) {
+export default function usePosition(props: UsePositionProps={}) {
+	const {config,
+		getOptions,
+		streamPosition} = props
 	const [position, setPosition] = useState<Position | null>(null)
 	const [motion, setMotion] = useState<Motion | null>(null)
 	const [error, setError] = useState<PositionError>()
@@ -60,7 +66,7 @@ export default function usePosition({streamPosition=false}: PositionHookProps) {
 				id = Geolocation
 					.watchPosition(onPositionUpdate,
 						onUpdateError,
-						watchOptions)}}
+						streamOptions)}}
 
 		function cleanUpPositionStream() {
 			Geolocation.clearWatch(id)}

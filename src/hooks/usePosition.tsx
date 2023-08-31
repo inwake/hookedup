@@ -17,7 +17,7 @@ const watchOptions = {enableHighAccuracy: true,
 	timeout: 10000,
 	maximumAge: 10000}
 
-export default function usePosition() {
+export default function usePosition({continuous = false}) {
 	const [position, setPosition] = useState(null)
 	const [motion, setMotion] = useState(null)
 	const [error, setError] = useState(null)
@@ -70,33 +70,18 @@ export default function usePosition() {
 				reject(error)}
 			Geolocation.getCurrentPosition(success, failure, getOptions)})}
 
-	function watchPosition() {
-		Geolocation
+	// function watchPosition() {
+	useEffect(function() {
+		if (continuous) return
+		const id = Geolocation
 			.watchPosition(onPositionUpdate,
 				onUpdateError,
-				watchOptions)}
-
-	// useEffect(() => {
-	// 	Geolocation.requestForegroundPermissionsAsync()
-	// 		.then(function({status}) {
-	// 			if (status !== 'granted') {
-	// 				setLocationError('Permission to access location was denied')
-	// 				setLocationReady(true)
-	// 				return}
-
-	// 			Geolocation.getCurrentPositionAsync({accuracy: Geolocation.Accuracy.High})
-	// 				.then(function(location) {
-	// 					setLocation(location)
-	// 					setLocationReady(true)
-	// 				}).catch(function(error) {
-	// 					setLocationError(error)
-	// 					setLocationReady(true)})})
-	// }, [setLocationReady,
-	// 	setLocationError,
-	// 	setLocation])
+				watchOptions)
+		return function() {
+			Geolocation.clearWatch(id)}
+	}, [continuous])
 
 	return {position, motion,
 		error, ready,
-		getPosition,
-		watchPosition}
+		getPosition}
 }

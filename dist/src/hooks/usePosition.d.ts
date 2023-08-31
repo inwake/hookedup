@@ -1,9 +1,28 @@
-interface UsePositionProps {
-    config?: typeof config;
-    getOptions?: typeof getOptions;
-    streamOptions?: typeof streamOptions;
+type UsePositionProps = {
+    config?: Config;
+    getOptions?: GetOptions;
+    streamOptions?: StreamOptions;
     streamPosition?: boolean;
-}
+};
+type Config = {
+    skipPermissionRequests: boolean;
+    enableBackgroundLocationUpdates: boolean;
+    authorizationLevel: 'whenInUse' | 'always' | 'auto';
+    locationProvider: 'playServices' | 'android' | 'auto';
+};
+type GetOptions = {
+    enableHighAccuracy: boolean;
+    timeout: number;
+    maximumAge: number;
+};
+type StreamOptions = {
+    enableHighAccuracy: boolean;
+    interval: number;
+    fastestInterval: number;
+    timeout: number;
+    maximumAge: number;
+    distanceFilter: number;
+};
 interface Position {
     latitude: number;
     longitude: number;
@@ -21,26 +40,7 @@ interface PositionError {
     status: string;
     code: number;
 }
-declare const config: {
-    skipPermissionRequests: boolean;
-    enableBackgroundLocationUpdates: boolean;
-    authorizationLevel: string;
-    locationProvider: string;
-};
-declare const getOptions: {
-    enableHighAccuracy: boolean;
-    timeout: number;
-    maximumAge: number;
-};
-declare const streamOptions: {
-    enableHighAccuracy: boolean;
-    interval: number;
-    fastestInterval: number;
-    timeout: number;
-    maximumAge: number;
-    distanceFilter: number;
-};
-export default function usePosition(props?: UsePositionProps): {
+export default function usePosition({ streamPosition, config: customConfig, getOptions: customGetOptions, streamOptions: customStreamOptions }?: UsePositionProps): {
     position: Position | null;
     motion: Motion | null;
     error: PositionError | undefined;

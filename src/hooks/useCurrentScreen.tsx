@@ -7,7 +7,7 @@ const screens = [{size: 'sm', width: 480},
 	{size: 'xl', width: 1440}]
 
 export default function useCurrentScreen() {
-	const [currentScreen, setCurrentScreen] = useState()
+	const [currentScreen, setCurrentScreen] = useState('md')
 	const dimensions = Dimensions.get('window')
 
 	useEffect(() => {

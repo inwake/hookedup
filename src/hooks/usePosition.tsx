@@ -24,6 +24,7 @@ export default function usePosition() {
 	const [ready, setReady] = useState(false)
 
 	useEffect(function() {
+		// @ts-ignore
 		Geolocation.setRNConfiguration(config)
 	}, [])
 
@@ -36,7 +37,9 @@ export default function usePosition() {
 		const position = {latitude, longitude, accuracy,
 			altitude, altitudeAccuracy, timestamp}
 
+		// @ts-ignore
 		setPosition(position)
+		// @ts-ignore
 		setMotion(motion)
 		setReady(true)}
 
@@ -48,6 +51,7 @@ export default function usePosition() {
 			unavailable,
 			timeout}
 		const status = codeMap[code]
+		// @ts-ignore
 		setError({message, status, code})
 		setReady(true)}
 

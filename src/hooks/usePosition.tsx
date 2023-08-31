@@ -1,11 +1,33 @@
 import {useState, useEffect} from 'react'
 import Geolocation from '@react-native-community/geolocation'
 
-interface UsePositionProps {
-  config?: typeof config
-  getOptions?: typeof getOptions
-  streamOptions?: typeof streamOptions
+type UsePositionProps = {
+  config?: Config
+  getOptions?: GetOptions
+  streamOptions?: StreamOptions
   streamPosition?: boolean
+}
+
+type Config = {
+  skipPermissionRequests: boolean
+  enableBackgroundLocationUpdates: boolean
+  authorizationLevel: 'whenInUse' | 'always' | 'auto'
+  locationProvider: 'playServices' | 'android' | 'auto'
+}
+
+type GetOptions = {
+  enableHighAccuracy: boolean
+  timeout: number
+  maximumAge: number
+}
+
+type StreamOptions = {
+  enableHighAccuracy: boolean
+  interval: number
+  fastestInterval: number
+  timeout: number
+  maximumAge: number
+  distanceFilter: number
 }
 
 interface Position {
@@ -28,23 +50,42 @@ interface PositionError {
 	code: number
 }
 
-const config = {skipPermissionRequests: false,
+const defaultCconfig: Config = {skipPermissionRequests: false,
 	enableBackgroundLocationUpdates: false,
 	authorizationLevel: 'whenInUse',
 	locationProvider: 'auto'}
 
-const getOptions = {enableHighAccuracy: true,
+const defaultGettOptions = {enableHighAccuracy: true,
 	timeout: 10000, maximumAge: 10000}
 
-const streamOptions = {enableHighAccuracy: true,
+const defaultStreamOptions = {enableHighAccuracy: true,
 	interval: 2500, fastestInterval: 1000,
 	timeout: 10000, maximumAge: 10000,
 	distanceFilter: 25}
 
-export default function usePosition(props: UsePositionProps={}) {
-	const {config,
-		getOptions,
-		streamPosition} = props
+export default function usePosition(
+	{streamPosition=false,
+		config: customConfig = defaultCconfig,
+		getOptions: customGetOptions = defaultGettOptions,
+		streamOptions: customStreamOptions = defaultStreamOptions}
+      : UsePositionProps = {}) {
+
+	const config = {...defaultCconfig, ...customConfig}
+	const getOptions = {...defaultGettOptions, ...customGetOptions}
+	const streamOptions = {...defaultStreamOptions, ...customStreamOptions}
+
+
+	// const config = {...config, ...customConfig}
+
+	// getOptions = {enableHighAccuracy: true,
+	// 	timeout: 10000, maximumAge: 10000},
+	// streamOptions = {enableHighAccuracy: true,
+	// 	interval: 2500, fastestInterval: 1000,
+	// 	timeout: 10000, maximumAge: 10000,
+	// 	distanceFilter: 25},
+	// streamPosition=false}
+	//   : UsePositionProps={}) {
+
 	const [position, setPosition] = useState<Position | null>(null)
 	const [motion, setMotion] = useState<Motion | null>(null)
 	const [error, setError] = useState<PositionError>()

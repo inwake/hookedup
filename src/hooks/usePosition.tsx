@@ -28,20 +28,25 @@ export default function usePosition() {
 		Geolocation.setRNConfiguration(config)
 	}, [])
 
-	function onPositionUpdate({coords:
-		{latitude, longitude, accuracy,
-			altitude, altitudeAccuracy,
-			speed, heading}, timestamp}) {
+	function onPositionUpdate(data) {
+		const {coords, timestamp} = data
+		const motionData = {speed: coords.speed, heading: coords.heading}
+		const positionData = {latitude: coords.latitude,
+			longitude: coords.longitude,
+			accuracy: coords.accuracy,
+			altitude: coords.altitude,
+			altitudeAccuracy: coords.altitudeAccuracy,
+			timestamp: timestamp}
 
-		const motion = {speed, heading}
-		const position = {latitude, longitude, accuracy,
-			altitude, altitudeAccuracy, timestamp}
+		// Set state
+		// @ts-ignore
+		setPosition(positionData)
+		// @ts-ignore
+		setMotion(motionData)
+		setReady(true)
 
-		// @ts-ignore
-		setPosition(position)
-		// @ts-ignore
-		setMotion(motion)
-		setReady(true)}
+		// Return the processed data
+		return positionData}
 
 	function onUpdateError({code, message,
 		PERMISSION_DENIED: denied,
@@ -57,16 +62,13 @@ export default function usePosition() {
 
 	function getPosition() {
 		return new Promise(function(resolve, reject) {
-			function success(position) {
-				onPositionUpdate(position)
-				resolve(position)}
+			function success(positionData) {
+				const resolvedData = onPositionUpdate(positionData)
+				resolve(resolvedData)}
 			function failure(error) {
 				onUpdateError(error)
 				reject(error)}
-			Geolocation
-				.getCurrentPosition(success,
-					failure,
-					getOptions)})}
+			Geolocation.getCurrentPosition(success, failure, getOptions)})}
 
 	function watchPosition() {
 		Geolocation

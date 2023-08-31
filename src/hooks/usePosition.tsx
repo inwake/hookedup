@@ -17,7 +17,7 @@ const watchOptions = {enableHighAccuracy: true,
 	timeout: 10000,
 	maximumAge: 10000}
 
-export default function usePosition({continuous = false}) {
+export default function usePosition({continuous=false}) {
 	const [position, setPosition] = useState(null)
 	const [motion, setMotion] = useState(null)
 	const [error, setError] = useState(null)
@@ -27,6 +27,16 @@ export default function usePosition({continuous = false}) {
 		// @ts-ignore
 		Geolocation.setRNConfiguration(config)
 	}, [])
+
+	useEffect(function() {
+		if (!continuous) return
+		const id = Geolocation
+			.watchPosition(onPositionUpdate,
+				onUpdateError,
+				watchOptions)
+		return function() {
+			Geolocation.clearWatch(id)}
+	})
 
 	function onPositionUpdate(data) {
 		const {coords, timestamp} = data
@@ -69,17 +79,6 @@ export default function usePosition({continuous = false}) {
 				onUpdateError(error)
 				reject(error)}
 			Geolocation.getCurrentPosition(success, failure, getOptions)})}
-
-	// function watchPosition() {
-	useEffect(function() {
-		if (continuous) return
-		const id = Geolocation
-			.watchPosition(onPositionUpdate,
-				onUpdateError,
-				watchOptions)
-		return function() {
-			Geolocation.clearWatch(id)}
-	}, [continuous])
 
 	return {position, motion,
 		error, ready,

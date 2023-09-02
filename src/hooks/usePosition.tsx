@@ -88,11 +88,11 @@ export default function usePosition(
 				.watchPosition(onPositionUpdate,
 					onUpdateError, streamOptions)}
 
-		function cleanUpPositionStream() {
+		function cleanUpPositionStream(id) {
 			if (id) Geolocation.clearWatch(id)}
 
-		return cleanUpPositionStream
-	})
+		return function() {cleanUpPositionStream(id)}
+	}, [streamPosition, streamOptions])
 
 	function onPositionUpdate(data): Position {
 		const {coords, timestamp} = data

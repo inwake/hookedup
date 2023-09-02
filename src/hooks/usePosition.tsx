@@ -115,12 +115,15 @@ export default function usePosition(
 	function onUpdateError({code, message, ...rest}): PositionError {
 		const errKeys = ['PERMISSION_DENIED', 'POSITION_UNAVAILABLE', 'TIMEOUT']
 
-		const status = Object.entries(rest).find(
-			([key, isErr]) => Boolean(Number(isErr)) && errKeys.includes(key as string)
-		)?.[0] || 'UNKNOWN_ERROR'
+		const status = Object.keys(rest)
+			.find(function(key) {
+				const isErr = rest[key]
+				return Boolean(Number(isErr))
+          && errKeys.includes(key as string)})
+      || 'UNKNOWN_ERROR'
 
 		const nextError: PositionError
-    = {status, message, code}
+      = {status, message, code}
 
 		if (nextError) {
 			setError(nextError)

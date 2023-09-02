@@ -35,16 +35,16 @@ interface Motion {
     speed: number;
     heading: number;
 }
-interface PositionError {
+type PositionError = {
     message: string;
     status: string;
     code: number;
-}
+};
 export default function usePosition({ streamPosition, config: customConfig, getOptions: customGetOptions, streamOptions: customStreamOptions }?: UsePositionProps): {
     position: Position | null;
     motion: Motion | null;
     error: PositionError | undefined;
     ready: boolean;
-    getPosition: () => Promise<unknown>;
+    getPosition: () => Promise<Position>;
 };
 export {};

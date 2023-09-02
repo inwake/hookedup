@@ -5,21 +5,18 @@ type UsePositionProps = {
   config?: Config
   getOptions?: GetOptions
   streamOptions?: StreamOptions
-  streamPosition?: boolean
-}
+  streamPosition?: boolean}
 
 type Config = {
   skipPermissionRequests: boolean
   enableBackgroundLocationUpdates: boolean
   authorizationLevel: 'whenInUse' | 'always' | 'auto'
-  locationProvider: 'playServices' | 'android' | 'auto'
-}
+  locationProvider: 'playServices' | 'android' | 'auto'}
 
 type GetOptions = {
   enableHighAccuracy: boolean
   timeout: number
-  maximumAge: number
-}
+  maximumAge: number}
 
 type StreamOptions = {
   enableHighAccuracy: boolean
@@ -27,8 +24,7 @@ type StreamOptions = {
   fastestInterval: number
   timeout: number
   maximumAge: number
-  distanceFilter: number
-}
+  distanceFilter: number}
 
 interface Position {
 	latitude: number
@@ -36,19 +32,16 @@ interface Position {
 	accuracy: number
 	altitude: number
 	altitudeAccuracy: number
-	timestamp: number
-}
+	timestamp: number}
 
 interface Motion {
 	speed: number
-	heading: number
-}
+	heading: number}
 
-interface PositionError {
+type PositionError = {
 	message: string
 	status: string
-	code: number
-}
+	code: number}
 
 const defaultCconfig: Config = {skipPermissionRequests: false,
 	enableBackgroundLocationUpdates: false,
@@ -83,30 +76,25 @@ export default function usePosition(
 	const [ready, setReady] = useState(false)
 
 	useEffect(function() {
-		(Geolocation as any)
-			.setRNConfiguration(config)
+		Geolocation.setRNConfiguration(config)
 	}, [])
 
 	useEffect(function() {
-		let id
-
-		if (streamPosition) setupPositionStream()
-		else if (!position) getPosition()
+		const id = setupPositionStream()
 
 		function setupPositionStream() {
-			if (!streamPosition) return
-			id = Geolocation
+			if (!streamPosition) return false
+			else return Geolocation
 				.watchPosition(onPositionUpdate,
-					onUpdateError,
-					streamOptions)}
+					onUpdateError, streamOptions)}
 
 		function cleanUpPositionStream() {
-			Geolocation.clearWatch(id)}
+			if (id) Geolocation.clearWatch(id)}
 
 		return cleanUpPositionStream
 	})
 
-	function onPositionUpdate(data: any): Position {
+	function onPositionUpdate(data): Position {
 		const {coords, timestamp} = data
 		const motionData = {speed: coords.speed,
 			heading: coords.heading}
@@ -124,26 +112,39 @@ export default function usePosition(
 
 		return positionData}
 
-	function onUpdateError({code, message,
-		PERMISSION_DENIED: denied,
-		POSITION_UNAVAILABLE: unavailable,
-		TIMEOUT: timeout}: any) {
-		const codeMap = {denied,
-			unavailable, timeout}
-		const status = codeMap[code]
-		setError({message, status, code})
-		setReady(true)}
+	function onUpdateError({code, message, ...rest}): PositionError {
+		const errKeys = ['PERMISSION_DENIED', 'POSITION_UNAVAILABLE', 'TIMEOUT']
 
-	function getPosition() {
+		const status = Object.entries(rest).find(
+			([key, isErr]) => Boolean(Number(isErr)) && errKeys.includes(key as string)
+		)?.[0] || 'UNKNOWN_ERROR'
+
+		const nextError: PositionError
+    = {status, message, code}
+
+		if (nextError) {
+			setError(nextError)
+			setReady(true)
+			return nextError}
+
+		throw new Error('Error object is undefined')
+	}
+
+	function getPosition(): Promise<Position> {
 		return new Promise(function(resolve, reject) {
 			function success(positionData) {
-				const resolvedData
-					= onPositionUpdate(positionData)
+				const resolvedData = onPositionUpdate(positionData)
 				resolve(resolvedData)}
+
 			function failure(error) {
 				onUpdateError(error)
 				reject(error)}
-			Geolocation.getCurrentPosition(success, failure, getOptions)})}
+
+			Geolocation
+				.getCurrentPosition(success,
+					failure, getOptions)
+		})
+	}
 
 	return {position, motion,
 		error, ready,

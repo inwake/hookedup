@@ -48,7 +48,7 @@ const defaultCconfig: Config = {skipPermissionRequests: false,
 	authorizationLevel: 'whenInUse',
 	locationProvider: 'auto'}
 
-const defaultGettOptions = {enableHighAccuracy: true,
+const defaultGetOptions = {enableHighAccuracy: true,
 	timeout: 10000, maximumAge: 10000}
 
 const defaultStreamOptions = {enableHighAccuracy: true,
@@ -59,13 +59,13 @@ const defaultStreamOptions = {enableHighAccuracy: true,
 export default function usePosition(
 	{streamPosition=false,
 		config: customConfig = defaultCconfig,
-		getOptions: customGetOptions = defaultGettOptions,
+		getOptions: customGetOptions = defaultGetOptions,
 		streamOptions: customStreamOptions = defaultStreamOptions}
       : UsePositionProps = {}) {
 
 	const config = {...defaultCconfig,
 		...customConfig}
-	const getOptions = {...defaultGettOptions,
+	const getOptions = {...defaultGetOptions,
 		...customGetOptions}
 	const streamOptions = {...defaultStreamOptions,
 		...customStreamOptions}

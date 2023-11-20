@@ -1,46 +1,57 @@
 import {useState, useEffect} from 'react'
-// import {initFirebase, analytics} from '../../lib/firebase'
 
-export default function useFirebaseAnalytics({analytics,
-    routerLocation,
-    pathToPageName}) {
-  const [error, setError] = useState(false)
+
+export default function useFirebaseAnalytics({enabled=false,
+  firebase,
+  firebaseReady,
+  routerLocation,
+  pathToPageName}) {
   const [analyticsReady, setAnalyticsReady] = useState(false)
+  const [error, setError] = useState(null)
 
   useEffect(function() {
-    analytics().then(function(analytics) {
-      setAnalyticsReady(true)
-      console.log('analytics', analytics)})
-  }, [])
+    if (!firebaseReady) return
 
-  // useEffect(function() {
-  //   initFirebase({useAnalytics: true})
-  //     .then(function({firebase, analytics}) {
-  //       setAnalyticsReady(true)})
-  // }, [])
+    firebase.analytics()
+      .setAnalyticsCollectionEnabled(Boolean(enabled))
+        .then(function() {
+          setAnalyticsReady(true)})
+        .catch(function(error) {
+          if (enabled) setError({message: 'Failed to enable analytics', error})
+          else setError({message: 'Failed to disable analytics', error})})
+  }, [enabled, firebase, firebaseReady])
 
   useEffect(function() {
     const path = routerLocation?.pathname
-    if (![analytics, analyticsReady, path].every(Boolean)) return;
+    if (![enabled, firebaseReady, analyticsReady, path]
+      .every(Boolean)) return
 
     let pageName = path
     if (pathToPageName) pageName = pathToPageName(path)
 
     analyticsPageView(pageName, path)
-  }, [analytics, analyticsReady, routerLocation])
+  }, [enabled, analyticsReady, routerLocation, pathToPageName])
 
   function analyticsPageView(pageName, path) {
-    if (!analytics) return
-      setError('Analytics not initialized')
-    analytics().pageView(pageName, path)
+    if (!enabled)
+      return setError({message: 'Analytics disabled'})
+    if (!analyticsReady)
+      return setError({message: 'Analytics not initialized'})
+    firebase.analytics()
+      .logScreenView({screen_name: pageName,
+        screen_class: path})
   }
 
   function analyticsEvent(name, value) {
-    if (!analytics) return
-      setError('Analytics not initialized')
-    if (![name, value].every(Boolean)) return
-      setError('Event name and value required')
-    analytics().event(name, value)
+    if (!enabled)
+      return setError({message: 'Analytics disabled'})
+    if (!analyticsReady)
+      return setError({message: 'Analytics not initialized'})
+    if (![name, value].every(Boolean))
+      return setError({message: 'Event name and value required'})
+
+    firebase.analytics()
+      .logEvent(name, value)
   }
 
   return {analyticsPageView,

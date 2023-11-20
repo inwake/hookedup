@@ -26,7 +26,8 @@
   },
   "include": [
     "./src",
-    "./.eslintrc.js"
+    ".eslintrc.js.old",
+    "eslint.config.js"
   ],
   "exclude": [
     "node_modules",

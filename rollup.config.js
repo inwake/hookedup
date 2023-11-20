@@ -21,6 +21,7 @@ export default {
 	external: ['react',
 		'react-dom',
 		'react-native',
+    'react-native-safe-area-context',
 		'prop-types',
 		'@react-native-community/geolocation']
 }

@@ -10,7 +10,7 @@ export default function useFirebaseAnalytics({enabled=false,
   const [error, setError] = useState(null)
 
   useEffect(function() {
-    if (!firebaseReady) return
+    if (!firebaseReady) return undefined
 
     firebase.analytics()
       .setAnalyticsCollectionEnabled(Boolean(enabled))

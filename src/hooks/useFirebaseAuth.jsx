@@ -13,12 +13,11 @@ export default function useFirebaseAuth({firebase, firebaseReady}) {
     setLoading(false)}
 
   useEffect(function() {
-    let unsubscribe
-    if (firebaseReady && firebase?.apps?.length) {
-      setLoading(true)
-      unsubscribe = firebase.auth()
-        .onAuthStateChanged(onAuthStateChanged)}
-    return unsubscribe
+    if (!firebaseReady) return undefined
+
+    setLoading(true)
+    return firebase.auth()
+      .onAuthStateChanged(onAuthStateChanged)
   }, [firebaseReady, firebase])
 
   function signInWithEmailAndPassword(email, password) {

@@ -1,11 +1,10 @@
-export default function useFirebaseAuth({ firebase, firebaseReady }: {
-    firebase: any;
+export default function useFirebaseAuth({ firebaseReady }: {
     firebaseReady: any;
 }): {
     user: null;
     userReady: boolean;
-    signInWithEmailAndPassword: (email: any, password: any) => any;
-    signUpWithEmailAndPassword: (email: any, password: any) => any;
+    signInWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
+    signUpWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
     loading: boolean;
     error: null;
 };

@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react'
+import auth from '@react-native-firebase/auth'
 
 
-export default function useFirebaseAuth({firebase, firebaseReady}) {
+export default function useFirebaseAuth({firebaseReady}) {
   const [user, setUser] = useState(null)
   const [ready, setReady] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -16,9 +17,9 @@ export default function useFirebaseAuth({firebase, firebaseReady}) {
     if (!firebaseReady) return undefined
 
     setLoading(true)
-    return firebase.auth()
+    return auth()
       .onAuthStateChanged(onAuthStateChanged)
-  }, [firebaseReady, firebase])
+  }, [firebaseReady])
 
   function signInWithEmailAndPassword(email, password) {
     if (!firebaseReady)
@@ -43,7 +44,7 @@ export default function useFirebaseAuth({firebase, firebaseReady}) {
       'auth/invalid-email': 'Email is invalid'}
 
     setLoading(true)
-    return firebase.auth()
+    return auth()
       .createUserWithEmailAndPassword(email, password)
         .then(function({user}) {
           setUser(user)

@@ -18,7 +18,7 @@ export default function useFirebase() {
   useEffect(() => {
     if (firebase.apps.length) {
       setReady(true)
-      return firebase.app()}
+      return}
 
     firebase.initializeApp(config)
       .then(function() {

@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth'
 
 export default function useFirebaseAuth({firebaseReady}) {
   const [user, setUser] = useState(null)
+  const [userSignInMethods, setUserSignInMethods] = useState([])
   const [ready, setReady] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)

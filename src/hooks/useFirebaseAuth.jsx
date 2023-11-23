@@ -58,26 +58,25 @@ export default function useFirebaseAuth({firebaseReady}) {
   }
 
   // https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection#security_recommendations
-  function verifyEmailExists(email) {
+  function usersAuthProviders(email) {
     if (!firebaseReady)
       return setError({message: 'Firebase not ready'})
 
     return new Promise(function(resolve, reject) {
-
       setLoading(true)
       auth()
       .fetchSignInMethodsForEmail(email)
-        .then(function(signInMethods) {
-          setUserSignInMethods(signInMethods)
-          resolve(signInMethods.length > 0)})
+        .then(function(authProviders) {
+          setUserSignInMethods(authProviders)
+          resolve(authProviders)})
         .catch(function(error) {
           setError({message: 'Unsuccessful sign in', error})
-          reject()})})
+          reject(error)})})
   }
 
   return {auth, user, userReady: ready,
     signInWithEmailAndPassword,
     signUpWithEmailAndPassword,
-    verifyEmailExists,
+    usersAuthProviders,
     loading, error}
 }

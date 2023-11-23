@@ -4,10 +4,9 @@ import auth from '@react-native-firebase/auth'
 
 export default function useFirebaseAuth({firebaseReady}) {
   const [user, setUser] = useState(null)
-  const [userSignInMethods, setUserSignInMethods] = useState([])
-  const [ready, setReady] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [ready, setReady] = useState(false)
 
   function onAuthStateChanged(newUser) {
     setUser(newUser)
@@ -58,7 +57,7 @@ export default function useFirebaseAuth({firebaseReady}) {
   }
 
   // https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection#security_recommendations
-  function usersAuthProviders(email) {
+  function findUserByEmail(email) {
     if (!firebaseReady)
       return setError({message: 'Firebase not ready'})
 
@@ -67,16 +66,16 @@ export default function useFirebaseAuth({firebaseReady}) {
       auth()
       .fetchSignInMethodsForEmail(email)
         .then(function(authProviders) {
-          setUserSignInMethods(authProviders)
           resolve(authProviders)})
         .catch(function(error) {
           setError({message: 'Unsuccessful sign in', error})
           reject(error)})})
   }
 
-  return {auth, user, userReady: ready,
+  return {auth, user, error, loading,
+    userReady: ready,
     signInWithEmailAndPassword,
     signUpWithEmailAndPassword,
-    usersAuthProviders,
-    loading, error}
+    findUserByEmail,
+    usersAuthProviders}
 }

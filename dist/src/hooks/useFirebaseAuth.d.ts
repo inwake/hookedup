@@ -3,10 +3,11 @@ export default function useFirebaseAuth({ firebaseReady }: {
 }): {
     auth: import("@react-native-firebase/app").ReactNativeFirebase.FirebaseModuleWithStaticsAndApp<import("@react-native-firebase/auth").FirebaseAuthTypes.Module, import("@react-native-firebase/auth").FirebaseAuthTypes.Statics>;
     user: null;
+    error: null;
+    loading: boolean;
     userReady: boolean;
     signInWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
     signUpWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
-    usersAuthProviders: (email: any) => void | Promise<any>;
-    loading: boolean;
-    error: null;
+    findUserByEmail: (email: any) => void | Promise<any>;
+    usersAuthProviders: any;
 };

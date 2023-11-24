@@ -9,5 +9,4 @@ export default function useFirebaseAuth({ firebaseReady }: {
     signInWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
     signUpWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
     findUserByEmail: (email: any) => void | Promise<any>;
-    usersAuthProviders: any;
 };

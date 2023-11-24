@@ -76,6 +76,5 @@ export default function useFirebaseAuth({firebaseReady}) {
     userReady: ready,
     signInWithEmailAndPassword,
     signUpWithEmailAndPassword,
-    findUserByEmail,
-    usersAuthProviders}
+    findUserByEmail}
 }

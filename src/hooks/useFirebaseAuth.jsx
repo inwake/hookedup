@@ -7,11 +7,11 @@ export default function useFirebaseAuth({firebaseReady}) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [ready, setReady] = useState(false)
+  const [userReady, setUserReady] = useState(false)
 
   function onAuthStateChanged(newUser) {
     setUser(newUser)
-    setReady(true)
+    setUserReady(true)
     setLoading(false)}
 
   useEffect(function() {
@@ -33,7 +33,7 @@ export default function useFirebaseAuth({firebaseReady}) {
           setAdditionalUserInfo(additionalUserInfo)
           setUser(user)
           setLoading(false)
-          setReady(true)})
+          setUserReady(true)})
         .catch(function(error) {
           setError({message: 'Unsuccessful sign in', error})})
   }
@@ -52,11 +52,34 @@ export default function useFirebaseAuth({firebaseReady}) {
           setAdditionalUserInfo(additionalUserInfo)
           setUser(user)
           setLoading(false)
-          setReady(true)})
+          setUserReady(true)})
         .catch(function(error) {
           setLoading(false)
           setError({message: errorMap[error.code]
             || 'Unsuccessful sign up', error})})
+  }
+
+  function signOut() {
+    if (!firebaseReady)
+      return setError({message: 'Firebase not ready'})
+    if (!user)
+      return setError({message: 'No user signed in'})
+
+    setLoading(true)
+    return new Promise(function(resolve, reject) {
+      auth()
+      .signOut()
+        .then(function() {
+          setUser(null)
+          setAdditionalUserInfo(null)
+          setLoading(false)
+          setUserReady(false)
+          resolve()})
+        .catch(function(error) {
+          const signOutError = {error,
+            message: 'Unsuccessful sign out'}
+          setError(signOutError)
+          reject(signOutError)})})
   }
 
   // https://cloud.google.com/identity-platform/docs/admin/email-enumeration-protection#security_recommendations
@@ -77,8 +100,8 @@ export default function useFirebaseAuth({firebaseReady}) {
 
   return {auth, user,
     additionalUserInfo,
-    loading, error, userReady: ready,
+    loading, error, userReady,
     signInWithEmailAndPassword,
     signUpWithEmailAndPassword,
-    findUserByEmail}
+    signOut, findUserByEmail}
 }

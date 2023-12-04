@@ -1,6 +1,5 @@
-export default function useFirebaseAnalytics({ enabled, firebase, firebaseReady, routerLocation, pathToPageName }: {
+export default function useFirebaseAnalytics({ enabled, firebaseReady, routerLocation, pathToPageName }: {
     enabled?: boolean | undefined;
-    firebase: any;
     firebaseReady: any;
     routerLocation: any;
     pathToPageName: any;

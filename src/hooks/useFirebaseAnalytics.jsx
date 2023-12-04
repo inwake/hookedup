@@ -1,8 +1,8 @@
 import {useState, useEffect} from 'react'
+import {firebase} from '@react-native-firebase/analytics'
 
 
 export default function useFirebaseAnalytics({enabled=false,
-  firebase,
   firebaseReady,
   routerLocation,
   pathToPageName}) {

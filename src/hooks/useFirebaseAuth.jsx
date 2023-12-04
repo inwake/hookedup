@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth'
 
 export default function useFirebaseAuth({firebaseReady}) {
   const [additionalUserInfo, setAdditionalUserInfo] = useState(null)
+  const [isNewUser, setIsNewUser] = useState(false)
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -54,6 +55,7 @@ export default function useFirebaseAuth({firebaseReady}) {
       auth().createUserWithEmailAndPassword(email, password)
         .then(function({user, additionalUserInfo}) {
           setAdditionalUserInfo(additionalUserInfo)
+          setIsNewUser(additionalUserInfo?.isNewUser)
           setUser(user)
           setLoading(false)
           setUserReady(true)
@@ -106,7 +108,7 @@ export default function useFirebaseAuth({firebaseReady}) {
   }
 
   return {auth, user,
-    additionalUserInfo,
+    additionalUserInfo, isNewUser,
     loading, error, userReady,
     signInWithEmailAndPassword,
     signUpWithEmailAndPassword,

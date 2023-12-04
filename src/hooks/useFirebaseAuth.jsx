@@ -27,15 +27,19 @@ export default function useFirebaseAuth({firebaseReady}) {
       return setError({message: 'Firebase not ready'})
 
     setLoading(true)
-    return auth()
-      .signInWithEmailAndPassword(email, password)
+    return new Promise(function(resolve, reject) {
+      auth().signInWithEmailAndPassword(email, password)
         .then(function({user, additionalUserInfo}) {
           setAdditionalUserInfo(additionalUserInfo)
           setUser(user)
           setLoading(false)
-          setUserReady(true)})
+          setUserReady(true)
+          resolve({user, additionalUserInfo})})
         .catch(function(error) {
-          setError({message: 'Unsuccessful sign in', error})})
+          const signInError = {error,
+            message: 'Unsuccessful sign in'}
+          setError(signInError)
+          reject(signInError)})})
   }
 
   function signUpWithEmailAndPassword(email, password) {
@@ -46,17 +50,20 @@ export default function useFirebaseAuth({firebaseReady}) {
       'auth/invalid-email': 'Email is invalid'}
 
     setLoading(true)
-    return auth()
-      .createUserWithEmailAndPassword(email, password)
+    return new Promise(function(resolve, reject) {
+      auth().createUserWithEmailAndPassword(email, password)
         .then(function({user, additionalUserInfo}) {
           setAdditionalUserInfo(additionalUserInfo)
           setUser(user)
           setLoading(false)
-          setUserReady(true)})
+          setUserReady(true)
+          resolve({user, additionalUserInfo})})
         .catch(function(error) {
+          const signUpError = {message: errorMap[error.code]
+            || 'Unsuccessful sign up', error}
           setLoading(false)
-          setError({message: errorMap[error.code]
-            || 'Unsuccessful sign up', error})})
+          setError(signUpError)
+          reject(signUpError)})})
   }
 
   function signOut() {

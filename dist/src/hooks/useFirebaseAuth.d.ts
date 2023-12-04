@@ -7,8 +7,8 @@ export default function useFirebaseAuth({ firebaseReady }: {
     loading: boolean;
     error: null;
     userReady: boolean;
-    signInWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
-    signUpWithEmailAndPassword: (email: any, password: any) => void | Promise<void>;
+    signInWithEmailAndPassword: (email: any, password: any) => void | Promise<any>;
+    signUpWithEmailAndPassword: (email: any, password: any) => void | Promise<any>;
     signOut: () => void | Promise<any>;
     findUserByEmail: (email: any) => void | Promise<any>;
 };

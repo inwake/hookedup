@@ -2,4 +2,3 @@
 .gitignore
 rollup.config.js
 tsconfig.json
-eslint.config.js

@@ -4,7 +4,10 @@
   "description": "A collection of React hooks",
   "author": "inwake",
   "license": "MIT",
-  "repository": "inwake/hookedup",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inwake/hookedup.git"
+  },
   "main": "dist/index.js",
   "engines": {
     "node": ">=8",

@@ -1,6 +1,6 @@
 {
   "name": "hookedup",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A collection of React hooks",
   "author": "inwake",
   "license": "MIT",
@@ -69,7 +69,8 @@
   },
   "keywords": [
     "react",
-    "react hooks"
+    "react hooks",
+    "firebase"
   ],
   "dependencies": {
     "@react-native-community/geolocation": "^3.0.6",
